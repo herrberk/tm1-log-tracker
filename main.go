@@ -5,7 +5,7 @@ import (
 	b64 "encoding/base64"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"net/http/cookiejar"
@@ -13,7 +13,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/hubert-heijkers/tm1-log-tracker/utils"
+	odata "github.com/hubert-heijkers/tm1-log-tracker/utils"
 	"github.com/joho/godotenv"
 )
 
@@ -55,9 +55,9 @@ var lastQuery time.Time
 // the message log of the server. Within one run of the server you will never miss any new entries
 // nor get any entry more then once for processing.
 // Examples of what one could do here are:
-//  - Filter and/or store the entries in whatever shape or form in a file or database
-//  - Track the time it takes to execute an MDX query (the actual implementation of this sample)
-//  - Identify any specific pattern you'd be interested in and have the code notify you perhaps?
+//   - Filter and/or store the entries in whatever shape or form in a file or database
+//   - Track the time it takes to execute an MDX query (the actual implementation of this sample)
+//   - Identify any specific pattern you'd be interested in and have the code notify you perhaps?
 func processMessageLogEntries(responseBody []byte) (string, string) {
 
 	// Unmarshal the JSON response
@@ -178,7 +178,7 @@ func main() {
 	})
 
 	// The body simply contains the version number of the server
-	version, _ := ioutil.ReadAll(resp.Body)
+	version, _ := io.ReadAll(resp.Body)
 	resp.Body.Close()
 
 	// We need at least version 10.2.20500 (read: 10.2.2 FP5) to implement a tracker as it takes
